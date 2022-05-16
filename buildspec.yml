@@ -1,0 +1,42 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo STARTING TEST
+      - set -e
+      - echo "$API_UUID"
+      - pip3 install -r requirements.txt
+      - python3 -m unittest -v backtest
+      - echo TEST DONE
+      - echo Logging in to Amazon ECR...
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 552513699221.dkr.ecr.us-east-1.amazonaws.com
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...          
+      - docker build -t blacklist-w5 .
+      - docker tag blacklist-w5:latest 552513699221.dkr.ecr.us-east-1.amazonaws.com/blacklist-w5:latest
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push 552513699221.dkr.ecr.us-east-1.amazonaws.com/blacklist-w5:latest
+      - echo Writing Image Definitions file...
+      - printf '[{"name":"Container-Blacklist-Fargate","imageUri":"552513699221.dkr.ecr.us-east-1.amazonaws.com/blacklist-w5:latest"}]' > imagedefinitions.json
+      - printf '{"ImageURI":"552513699221.dkr.ecr.us-east-1.amazonaws.com/blacklist-w5:latest"}' > imageDetail.json
+      - cat imagedefinitions.json 
+artifacts:
+  files:
+    - '**/*'
+    - imagedefinitions.json
+    - imageDetail.json
+  secondary-artifacts:
+    DefinitionArtifact:
+      files:
+        - appspec.yaml
+        - taskdef.json
+    ImageArtifact:
+      files:
+        - imageDetail.json
