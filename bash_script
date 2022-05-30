@@ -1,0 +1,4 @@
+set -e
+export API_UUID="84e532cb-0788-4729-a379-1f667f18a443"
+export API_TKN="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhcHBfdXVpZCI6Ijg0ZTUzMmNiLTA3ODgtNDcyOS1hMzc5LTFmNjY3ZjE4YTQ0MyJ9.wTHH_sbnfimd3b-BvJ-AfKWU7YdH9QWSesDcTQDzqgQ"
+python -m unittest -v backtest

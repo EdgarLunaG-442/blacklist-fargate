@@ -7,3 +7,7 @@ RUN pip install -r requirements.txt
 EXPOSE 5000
 
 CMD ["gunicorn","-c", "gunicorn.conf.py"]
+
+RUN pip install newrelic
+
+ENTRYPOINT ["newrelic-admin","run-program"]
